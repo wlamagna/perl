@@ -44,6 +44,7 @@ while (<A>) {
 		# sacarle esa extension
 		my $archivo_descifrado = $cifrar_este;
 		$archivo_descifrado =~ s/\.gpg//g if ("$cifrar_este" =~ /\.gpg/);
+		$archivo_descifrado = "$archivo_descifrado.ori" if ("$cifrar_este" !~ /\.gpg/);
 		if (-e "$archivo_descifrado") {
 			print "Este archivo ya existe, no puedo sobreescribir $archivo_descifrado\n";
 		} else {
