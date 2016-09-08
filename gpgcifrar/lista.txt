@@ -1,8 +1,0 @@
-abs_esp.tex
-introduccion.tex
-estadoarte.tex
-opendata.tex
-Preprocesamiento.tex
-convnet.tex
-experimentos.tex
-conclusiones.tex
