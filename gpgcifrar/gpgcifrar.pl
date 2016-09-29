@@ -36,8 +36,8 @@ while (<A>) {
 	if ("$comando" eq "-c") {
 		print "Cifrando $cifrar_este\n";
 		system ( "gpg --passphrase $c1 -c $cifrar_este" );
-		print "Eliminando original: $cifrar_este\n";
-		unlink "$cifrar_este";
+		print "Puede eliminar el original: $cifrar_este\n";
+		#unlink "$cifrar_este";
 	}
 	if ("$comando" eq "-d") {
 		# Si el archivo a descifrar termina con gpg, al descifrado
