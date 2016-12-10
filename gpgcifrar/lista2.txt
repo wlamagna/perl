@@ -1,1 +1,1 @@
-test.txt.avi
+/home/walter/post.txt.gpg

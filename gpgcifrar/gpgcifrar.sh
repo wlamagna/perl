@@ -40,7 +40,7 @@ for cifrar_este in `cat $list_file`; do
 		if [[ $archivo_descifrado == *.gpg ]]; then
                 	archivo_descifrado=`echo $cifrar_este | sed 's/\.gpg//g'`;
 		fi;
-		#archivo_descifrado=${archivo_descifrado}.ori;
+		archivo_descifrado=${archivo_descifrado}.ori;
 		echo "$archivo_descifrado";
                 if [[ -e "$archivo_descifrado" ]]; then
 			echo "Este archivo ya existe, no puedo sobreescribir $archivo_descifrado";
