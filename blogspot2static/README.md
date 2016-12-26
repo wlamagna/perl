@@ -30,4 +30,10 @@ cp -r css ${DIRSALIDA};
 # Ahora a testear!
 cd output
 python ../httpserver.py
+
+################## Cuando uno agrega un post solo habria que hacer esto
+DIRSALIDA="output";
+TMPFILE="pre";
+./summary.pl ${TMPFILE} ${DIRSALIDA};
+
 ```

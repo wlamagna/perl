@@ -38,20 +38,30 @@ require "funcion.pl" or die ("funcion.pl not found");
 binmode(OUT, ":utf8");
 my $html  = HTML::TreeBuilder->new;
 
+my $num_args = $#ARGV + 1;
+if ($num_args != 2) {
+    print "\nUsage: produce.pl <html obtained from blogspot> <directory to ouput intermediate file>\n";
+    print "\nexample: produce.pl blog/2014/03/the-blog.html pre\n";
+    exit;
+}
 open (A, $ARGV[0]) or die("file $ARGV[0] not found\n");
+my $outfile = $ARGV[0];
+$outfile =~ s/.*\///g;
+$outfile = "$ARGV[1]/$outfile";
+open (OUTPUT, ">$outfile") or die("file $outfile not found\n");
 
 my $root  = $html->parse_file( $ARGV[0] );
 my $blogtitle = $root->look_down(_tag => 'h1', class => 'title');
 my $date = $root->look_down(_tag => 'h2', class => 'date-header');
-print "blog-title: " . $blogtitle->as_text . "\n";
-print "begin-template-date: " . $date->as_text . "\n";
+print OUTPUT "blog-title: " . $blogtitle->as_text . "\n";
+print OUTPUT "begin-template-date: " . $date->as_text . "\n";
 my $title = $root->look_down(_tag => 'h3', class => 'post-title entry-title');
 
-print "template-title: " . $title->as_text . "\n";
+print OUTPUT "template-title: " . $title->as_text . "\n";
 
 my $article = $root->look_down(_tag => 'div', class => 'post-body entry-content');
 
-print "Begin Article ===\n";
+print OUTPUT "Begin Article ===\n";
 my $article_html = $article->as_HTML;
 my $article_digest = md5_base64($article_html);
 $article_digest =~ s/-//g;
@@ -61,5 +71,6 @@ $article_html =~ s/<div class=\"post-body .*?\">//g;
 $article_html =~ s/<\/div>$//g;
 $article_html =~ s/\n/<br>/g;
 #<div class="post-body entry-content" id="post-body-2204394603832579925" itemprop="description articleBody">
-print "$article_html\nEnd Article ===\n";
+print OUTPUT "$article_html\nEnd Article ===\n";
 close A;
+close OUTPUT;

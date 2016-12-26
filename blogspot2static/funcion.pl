@@ -3,6 +3,8 @@
 # How many posts in the main page, this can be customized
 our $counter = 8;
 # Month names, may be translated to other languages in the future
+our @days_en = ("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
+our @days_es = ("Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo");
 our @month_name_en = qw/ January February March April May June July August September October November December /;
 our @month_name_es = qw/ enero febrero marzo abril mayo junio julio agosto septiembre octubre noviembre diciembre /;
 our %month_num = ();
@@ -23,6 +25,9 @@ sub setear_datos_fecha() {
 }
 
 
+sub  trim { my $s = shift; $s =~ s/^\s+|\s+$//g; return $s };
+
+
 sub create_container_page() {
 	my $file_name = $_[0];
 	my $blog_title = $_[1];
@@ -40,10 +45,7 @@ print A "<html>
 </head>
 <frameset rows=\"100,*\" border=\"0\">
   <frame name=\"alto\" src=\"top.html\" scrolling=\"no\">
-  <frameset cols=\"300,*\">
-    <frame name=\"sx\" src=\"menu.html\" scrolling=\"yes\">
-    <frame name=\"central\" src=\"central.html\">
-  </frameset>
+  <frame name=\"central\" src=\"central.html\">
 </frameset>
 </html>\n";
 	close A;
@@ -52,17 +54,15 @@ print A "<html>
 
 
 
-
 sub file_start() {
 	my $file_name = $_[0];
 	my $title = $_[1];
 	open A, ">$file_name" or die("create_file(): Could not open $file_name for creation!\n");
-	print A "<html>
-<head>
+	print A "<html>\n<head>
 <title>$title</title>
 <link rel=\"stylesheet\" type=\"text/css\" href=\"css/blogstyle.css\">
 </head>
-<body>
+<body style=\"margin:20;padding:0;\">
 <script language=\"javascript\">
 window.parent.document.title = \"$title\";
 </script>\n";
@@ -81,37 +81,80 @@ sub put_content() {
 	my %post_epoch_title = %{ $_[1] };
 	my %post_epoch_post = %{ $_[2] };
 	my %post_epoch_date = %{ $_[3] };
-	my $epoch_article = $_[4];
-	my $md5 = $_[5];
-	my $put_ad = $_[6];
-  open A, ">>$file_name" or die("put_content(): Could not open $file_name for addition!\n");
-
-  my $title = $post_epoch_title{$epoch_article}{$md5};
-  my $file_name = uri_escape($title);
-
-  print A "<div id=\"section\">";
-
+	my %post_epoch_tags = %{ $_[4] };
+	my $epoch_article = $_[5];
+	my $md5 = $_[6];
+	my $put_ad = $_[7];
+	open A, ">>$file_name" or die("put_content(): Could not open $file_name for addition!\n");
+	my $title = $post_epoch_title{$epoch_article}{$md5};
+	my $file_name = uri_escape($title);
+	print A "<div id=\"section\">\n";
 	if ($put_ad == 1) {
 		print A "<script type=\"text/javascript\">
 google_ad_client = \"ca-pub-1655368661140826\";
 google_ad_slot = \"5799356291\";
 google_ad_width = 728;
 google_ad_height = 90;
-</script>
-<!-- blog_linux_1 -->
-<script type=\"text/javascript\" src=\"http://pagead2.googlesyndication.com/pagead/show_ads.js\">
-</script>";
+</script><!-- blog_linux_1 -->";
+		print A "<script type=\"text/javascript\" src=\"http://pagead2.googlesyndication.com/pagead/show_ads.js\">\n";
+		print A "</script>";
 	}
-
-print A "<p id=\"postTitle\">$title</p>
-<p>";
+	print A "<p id=\"postTitle\"><a href=\"$file_name.html\" id=\"alink\">$title</a></p>\n";
 	#print A $post_epoch_title{$epoch_article}{$md5};
 	print A $post_epoch_post{$epoch_article}{$md5};
 	print A "<b>Published: " . $post_epoch_date{$epoch_article}{$md5} . "</b>\n";
-	#print A "</p></div><hr>\n";
+	#print A "</div><hr>\n";
 	# print some status about the script execution, for debugging:
 	#print "$epoch_article\t" . $post_epoch_date{$epoch_article}{$md5} . "\t$title [$counter]\n";
-	print A "<hr>\n";
+	my $tags = $post_epoch_tags{$epoch_article}{$md5};
+	my @taglist = split(",", $tags);
+	foreach my $t (@taglist) {
+		print A "<a href=\"tag_$t\">$t</a>&nbsp;";
+	}
+	print A "\n</div>\n";
+	print A "\n<hr>\n";
+	close A;
+}
+
+
+# This function creates the menu.html file withe
+# the years/month/articles
+sub create_tags_list() {
+	my $file_name = $_[0];
+	my %articles_per_tag = %{ $_[1] };
+
+	# And now, just create the date index with the articles
+	open A, ">>$file_name" or die("create_tags_list(): Could not open $file_name for addition!\n");
+	print A "<center>\n";
+	foreach my $tag (sort keys %articles_per_tag) {
+		print A "<a href=\"tag_$tag.html\" target=\"central\">$tag</a> (";
+		print A $articles_per_tag{$tag};
+		print A ")&nbsp\n";
+	}
+	print A "</center>\n";
+	print A "</div>";
+	close A;
+}
+
+
+# This function creates the menu.html file withe
+# the years/month/articles
+sub create_years_list() {
+	my $file_name = $_[0];
+	my %articles_per_year = %{ $_[1] };
+
+	# And now, just create the date index with the articles
+	my $previous_year = "";
+	my $previous_month = "";
+	open A, ">>$file_name" or die("create_index_with_dates(): Could not open $file_name for addition!\n");
+	print A "<div style=\"font-family: Verdana; color: #b3ffff; font-size: 12px;\">\n";
+	print A "\n<center>\n";
+	foreach my $year (reverse sort keys %articles_per_year) {
+		print A "<a href=\"y$year.html\" target=\"central\">$year</a> (";
+		print A $articles_per_year{$year};
+		print A ")&nbsp\n";
+	}
+	print A "</center>\n";
 	close A;
 }
 
@@ -129,11 +172,11 @@ sub create_index_with_dates() {
 	my $previous_month = "";
 	open A, ">>$file_name" or die("create_index_with_dates(): Could not open $file_name for addition!\n");
 	#print A "<tr><td style=\"width: 200px; background-color:#eeeeee;\" valign=\"top\">
-	print A "<html><body><head>
+	print A "<html><body style=\"margin:20;padding:0;\"><head>
 <link rel=\"stylesheet\" type=\"text/css\" href=\"css/blogstyle.css\">
 <script type=\"text/javascript\" src=\"js/jquery-1.4.2.min.js\"></script>
 <script type=\"text/javascript\" src=\"js/archive_anim.js\"></script>
-</head><body>
+</head><body style=\"margin:20;padding:0;\">
 <div id=\"listContainer\" valign=\"top\">
 <ul id=\"expList\">\n";
   foreach my $epoch_article (reverse sort keys %post_epoch_date) {
