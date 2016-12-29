@@ -244,9 +244,13 @@ INDEXER: foreach my $epoch_article (reverse sort keys %post_epoch_date) {
 	foreach my $md5 (keys %{$post_epoch_date{$epoch_article}}) {
 		$counter = $counter - 1;
 		$contador_total_articulos = $contador_total_articulos + 1;
-		if ((($counter + $articles_date) == 0) || ($contador_total_articulos == $page_length)) {
-			$put_ad = 1;
-		}
+	#	if ((($counter + $articles_date) == 0) || ($contador_total_articulos == $page_length)) {
+	#		# Google publicity:
+	#		#$put_ad = 1;
+	#		# Paypal
+	#		$put_ad = 2;
+	#	}
+		$put_ad = 2;
 		put_content("$directory_with_blog/central.html", \%post_epoch_title, 
 		\%post_epoch_post, \%post_epoch_date, \%post_epoch_tag, "$epoch_article", "$md5", $put_ad);
 		if ($contador_total_articulos == $page_length) {
@@ -276,7 +280,7 @@ foreach my $epoch_article (reverse sort keys %post_epoch_date) {
 		#\%post_epoch_date, \%articles_per_year_month, \%post_epoch_title, \%articles_per_year);
 		file_start("$directory_with_blog/$file_name.html", "$title");
 		put_content("$directory_with_blog/$file_name.html", \%post_epoch_title, 
-		\%post_epoch_post, \%post_epoch_date, \%post_epoch_tag, "$epoch_article", "$md5", 0);
+		\%post_epoch_post, \%post_epoch_date, \%post_epoch_tag, "$epoch_article", "$md5", 2);
 		file_end("$directory_with_blog/$file_name.html");
 	}
 }
@@ -304,7 +308,7 @@ foreach my $epoch_article (reverse sort keys %post_epoch_date) {
 		$title =~ s/\s$//g;
 		my $file_name = $title;
 		put_content("$directory_with_blog/y$year.html", \%post_epoch_title, 
-		\%post_epoch_post, \%post_epoch_date, \%post_epoch_tag, "$epoch_article", "$md5", 0);
+		\%post_epoch_post, \%post_epoch_date, \%post_epoch_tag, "$epoch_article", "$md5", 2);
 	}
 }
 foreach my $y (@possible_years) {

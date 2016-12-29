@@ -9,7 +9,7 @@ use Net::DHCP::Constants;
 my $server_ip = "10.10.10.176";
 my $gateway = "10.10.10.1";
 my $dnserver = "8.8.8.8";
-my $subnet_mask = "255.255.255.255";
+my $subnet_mask = "255.255.255.0";
 
 my %mac_a_ip = ();
 

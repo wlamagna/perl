@@ -99,6 +99,16 @@ google_ad_height = 90;
 		print A "<script type=\"text/javascript\" src=\"http://pagead2.googlesyndication.com/pagead/show_ads.js\">\n";
 		print A "</script>";
 	}
+	if ($put_ad == 2) {
+		print A "\n\n
+<form action=\"https://www.paypal.com/cgi-bin/webscr\" method=\"post\" target=\"_top\">
+<input type=\"hidden\" name=\"cmd\" value=\"_s-xclick\">
+<input type=\"hidden\" name=\"hosted_button_id\" value=\"7HY2N4VFEWYCL\">
+<input type=\"image\" src=\"https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif\" border=\"0\" name=\"submit\" alt=\"PayPal - The safer, easier way to pay online!\">
+¿ Te sirvió la data ? ¿ Te pareció interesante ? Con tu aporte puedo continuar. <img alt=\"\" border=\"0\" src=\"https://www.paypalobjects.com/en_US/i/scr/pixel.gif\" width=\"1\" height=\"1\">
+</form>
+\n<hr>\n";
+	}
 	print A "<p id=\"postTitle\"><a href=\"$file_name.html\" id=\"alink\">$title</a></p>\n";
 	#print A $post_epoch_title{$epoch_article}{$md5};
 	print A $post_epoch_post{$epoch_article}{$md5};
