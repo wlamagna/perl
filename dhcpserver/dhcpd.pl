@@ -14,9 +14,9 @@ my $subnet_mask = "255.255.255.0";
 my %mac_a_ip = ();
 
 # Decodificador Telecentro
-$mac_a_ip{"b0b28f232fc900000000000000000000"} = "10.10.10.200";
+$mac_a_ip{"b0bbbf232fc900000000000000000000"} = "10.10.10.200";
 # Maquina VM trabajo
-$mac_a_ip{"080027ddbbf100000000000000000000"} = "10.10.10.55";
+$mac_a_ip{"080bb7ddbbf100000000000000000000"} = "10.10.10.55";
 
 my $socket_in = IO::Socket::INET->new(
 	LocalPort => 67,
