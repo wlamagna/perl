@@ -7,7 +7,7 @@
 #
 #
 # v1.0 - 24-Mayo-2017 - Walter M. Lamagna - Extraccion y transformacion preliminar
-#
+# v2.0 - 29-Mayo-2017 - Walter M. Lamagna - Un parche para radar "TraffiPatro", solucion para Tipos de Portatil sin registro grafico
 #
 
 if (($#ARGV + 1) < 1) {
@@ -32,21 +32,23 @@ while (<A> ) {
 	$line =~ s/^\s*//g;
 	next if ($line =~ /^MARCA/);
 	next if ($line =~ /^CODIGO/);
-	if ($line =~ /^estados unidos/) {
-		next;
-	}
+	next if ($line =~ /^estados unidos/);
 	if ($line =~ /^PORTATIL sin reg./) {
+		$tmp_TIPO = "$line";
 		next;
 	}
-	# Un caso especial y unico:
-	if ($line =~ /^Laser Atlanta\/Jet Software SpeedLaser\/Imágenes/ ) {
-		next;
-	}
-	if ($line =~ /^Stalker Lidar\/Detectra Lidar/) {
-		next;
-	}
+	# Un casos especiales, pendiente arreglar:
+	next if ($line =~ /^Laser Atlanta\/Jet Software SpeedLaser\/Imágenes/ );
+	next if ($line =~ /^Stalker Lidar\/Detectra Lidar/);
+	next if ($line =~ /^PARVUS M9/);
+	$line =~ s/Á/A/g;
+	$line =~ s#DNCI\s{2,30}N..#>DNCI Nr#g;
+	$line =~ s#DNCI\sNr\s{2,30}([0-9])#DNCI Nr \1#g;
+	$line =~ s#\s{3,30}al\s{3,30}# al #g;
 	$line =~ s/\s{2,33}/\t/g;
-	my ($MARCA,$MODELO,$INDUSTRIA,$NDESERIE,$APROBACION,$Vigentedesde) = split (/\t/, $line);
+	my ($MARCA,$MODELO,$INDUSTRIA,$NDESERIE,$APROBACION,$Vigentedesde,$TIPO) = split (/\t/, $line);
+	$TIPO="$tmp_TIPO $TIPO";
+	$tmp_TIPO="";
 	$Vigentedesde =~ s# al #,#g;
 	$Vigentedesde =~ s#//#/#g;
 	$Vigentedesde =~ s# ##g;
@@ -58,7 +60,8 @@ while (<A> ) {
 	if ($INDUSTRIA eq "argentina /") { $INDUSTRIA = "argentina"; }
 	if ($INDUSTRIA eq "Argentina /") { $INDUSTRIA = "argentina"; }
 	if ($INDUSTRIA eq "EE UU") { $INDUSTRIA = "estados unidos"; }
-	print "$MARCA,$MODELO,$INDUSTRIA,$NDESERIE,$APROBACION,$Vigentedesde\n";
+	$TIPO =~ s/PORTATIL sin reg. gráfico/PORTATIL/g;
+	print "$MARCA,$MODELO,$INDUSTRIA,$NDESERIE,$APROBACION,$Vigentedesde,$TIPO\n";
 }
 close A;
 

@@ -14,11 +14,11 @@ ARCHIVOS="cinemometros.1116.pdf cinemometros.1216.pdf cinemometros.0217.pdf";
 ARCHIVOS="$ARCHIVOS cinemometros.0317.pdf cinemometros.0417.pdf cinemometros.0517.pdf";
 
 for a in $ARCHIVOS; do
-	pdftotext -fixed 2 -nopgbrk $a;
+	pdftotext -fixed 3 -nopgbrk $a;
 done;
 
 cat cinemometros.*.txt > cinemometros.txt
 
-echo "MARCA,MODELO,INDUSTRIA,NDESERIE,APROBACION,desde,hasta" > data.csv;
+echo "MARCA,MODELO,INDUSTRIA,NDESERIE,APROBACION,desde,hasta,TIPO" > data.csv;
 ./normalize.pl cinemometros.txt | sort | uniq >> data.csv
 
