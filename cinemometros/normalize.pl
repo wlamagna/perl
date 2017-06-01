@@ -61,6 +61,7 @@ while (<A> ) {
 	if ($INDUSTRIA eq "Argentina /") { $INDUSTRIA = "argentina"; }
 	if ($INDUSTRIA eq "EE UU") { $INDUSTRIA = "estados unidos"; }
 	$TIPO =~ s/PORTATIL sin reg. gráfico/PORTATIL/g;
+	$TIPO = trim($TIPO);
 	print "$MARCA,$MODELO,$INDUSTRIA,$NDESERIE,$APROBACION,$Vigentedesde,$TIPO\n";
 }
 close A;
