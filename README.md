@@ -1,5 +1,4 @@
-### Descripcion
+### Description
 
-Algunas "herramientas" hechas en perl para que otros puedan utilizarlas.
-
+Some tools i made in perl and share them here so other can use them.
 
